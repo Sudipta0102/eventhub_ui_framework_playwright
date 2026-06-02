@@ -1,12 +1,22 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+// 1. Create a dictionary of target environments
+const ENV_URLS : Record<string, string> = {
+  qa: 'https://eventhub.rahulshettyacademy.com',
+  staging: 'https://eventhub.rahulshettyacademy.com',
+  prod: 'https://eventhub.rahulshettyacademy.com',
+};
+
+// # Runs against QA (by default)
+// npx playwright test
+
+// # Runs against Staging
+// TEST_ENV=staging npx playwright test
+
+// # Runs against Production
+// TEST_ENV=prod npx playwright test
+const targetEnv = process.env.TEST_ENV || 'qa';
+
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -24,12 +34,23 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  use: {
-    /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+  timeout: 30 * 1000, // 30 seconds
+
+   expect: {
+    // 4. Assertion Timeout: Max time expect() waits for a condition to be met
+    timeout: 5 * 1000, // 5 seconds
+  },
+  use: {
+    baseURL: ENV_URLS[targetEnv],
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+
+     // Action Timeout: Max time locator actions (e.g., .click(), .fill()) wait
+    actionTimeout: 10 * 1000, // 10 seconds
+
+    // Navigation Timeout: Max time page.goto() or page.waitForURL() waits
+    navigationTimeout: 15 * 1000, // 15 seconds
   },
 
   /* Configure projects for major browsers */
