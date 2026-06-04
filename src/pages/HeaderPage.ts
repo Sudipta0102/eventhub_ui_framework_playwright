@@ -23,19 +23,23 @@ export class HeaderPage{
         this.manageBookingsBtn = adminContainer.getByRole('link', {name: 'Manage Bookings'});    
     }
 
-    async goToEvents(){
+    async goToEvents(): Promise<void>{
         await this.eventBtn.click();
     }
 
-    async goToMyBookings(){
+    async goToMyBookings(): Promise<void>{
         await this.myBookingBtn.click();
     }
 
-    async createNewEvent(){
+    async goToAdmin(): Promise<void>{
+        await this.adminLink.click();
+    }
+
+    async createNewEvent(): Promise<void>{
         await this.manageEventsBtn.click();
     }
 
-    async goToManageBookings(){
+    async goToManageBookings(): Promise<void>{
         await this.manageBookingsBtn.click();
     }
 
