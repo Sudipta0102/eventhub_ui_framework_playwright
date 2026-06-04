@@ -25,4 +25,12 @@ export class EventsPage{
         // click() will auto wait
         await bookNowBtn.click();
     }
+
+    getHeadingOfFirstEvent(){
+
+        return this.events
+        .first()
+        .filter({has: this.page.locator('h3', {hasText:'Dilli Diwali Mela'})});
+
+    }
 }
