@@ -14,6 +14,7 @@ export class CreateEventPage{
     private readonly seats: Locator;
     private readonly imageUrl: Locator;
     private readonly addEventBtn: Locator;
+    private readonly toastMsg: Locator;
 
     constructor(page: Page){
         this.page = page;
@@ -28,11 +29,14 @@ export class CreateEventPage{
         this.seats = page.locator('#total-seats');
         this.imageUrl = page.locator("input[id='image-url-(optional)']");
         this.addEventBtn = page.getByRole('button', { name: '+ Add Event' });
+        this.toastMsg = page.getByText('Event created!');
     }
 
     async createEvent(event: EventData): Promise<void>{
 
         await this.newEventHeading.waitFor({ state: 'visible' });
+
+        await this.title.fill(event.title);
 
         if(event.description){
             await this.description.fill(event.description);
@@ -53,5 +57,9 @@ export class CreateEventPage{
 
         await this.addEventBtn.click();
         
+    }
+
+    getToastNotification() {
+        return this.toastMsg;
     }
 }
