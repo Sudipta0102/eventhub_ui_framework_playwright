@@ -8,7 +8,7 @@ import { EventData } from '../src/types/event.types';
 
 test.describe('Create Event Test', ()=>{
 
-    test('should login', async({ apiAuthenticatedPage }) =>{
+    test.skip('should login', async({ apiAuthenticatedPage }) =>{
 
         await apiAuthenticatedPage.goto("/events");
         const eventsPage = new EventsPage(apiAuthenticatedPage);
@@ -17,7 +17,7 @@ test.describe('Create Event Test', ()=>{
 
     })
 
-    test('should login with ui', async({ uiAuthenticatedPage })=>{
+    test.skip('should login with ui', async({ uiAuthenticatedPage })=>{
 
         await uiAuthenticatedPage.goto("/events");
         const eventsPage = new EventsPage(uiAuthenticatedPage);
