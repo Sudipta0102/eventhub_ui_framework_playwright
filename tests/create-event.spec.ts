@@ -4,8 +4,9 @@
 // import { EventsPage } from '../src/pages/EventsPage';
 // import { DashboardPage } from '../src/pages/DashboardPage';
 // import { CreateEventPage } from '../src/pages/CreateEventPage';
+// import { EventData } from '../src/types/event.types';
 import { test, expect } from '../src/fixtures';
-import { EventData } from '../src/types/event.types';
+import { EventFactory } from '../test-data/event.factory';
 
 test.describe('Create Event Test', ()=>{
 
@@ -35,17 +36,7 @@ test.describe('Create Event Test', ()=>{
         //const createEventPage = new CreateEventPage(apiAuthenticatedPage);
 
         // Defining test data using the EventData structure
-        const mockEvent: EventData = {
-            title: 'Dilli Diwali Mela',
-            description: 'A grand celebration of lights, food, and culture.',
-            category: 'Festival',
-            city: 'Delhi',
-            venue: 'Pragati Maidan Exhibition Grounds',
-            dateTime: '2026-10-20T18:30', // HTML5 local datetime string format
-            price: 300,
-            seats: 2,
-            imageUrl: 'https://unsplash.com'
-        };
+        const mockEvent = EventFactory.createEventsWithOptionalFields();
 
         await pomWithAPIAuthenticatedPage.createEventPage.createEvent(mockEvent);
         //await apiAuthenticatedPage.pause();
@@ -65,15 +56,7 @@ test.describe('Create Event Test', ()=>{
         //const createEventPage = new CreateEventPage(apiAuthenticatedPage);
 
         // description and imageUrl are missing here
-        const minimalEvent: EventData = {
-            title: 'Tech Conference 2026',
-            category: 'Conference',
-            city: 'Bangalore',
-            venue: 'BIEC Hall 1',
-            dateTime: '2026-11-05T09:00',
-            price: 0, // Free event passed cleanly as a number
-            seats: 10
-        };
+        const minimalEvent = EventFactory.createEventsWithoutOptionalFields();
 
         await pomWithAPIAuthenticatedPage.createEventPage.createEvent(minimalEvent);
         await expect(pomWithAPIAuthenticatedPage.createEventPage.getToastNotification()).toBeVisible();
