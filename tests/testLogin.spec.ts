@@ -1,19 +1,20 @@
-import {  test, expect } from '@playwright/test';
-import { LoginPage } from '../src/pages/LoginPage';
-import { DashboardPage } from '../src/pages/DashboardPage';
+// import {  test, expect } from '@playwright/test';
+// import { LoginPage } from '../src/pages/LoginPage';
+// import { DashboardPage } from '../src/pages/DashboardPage';
+import { test, expect } from '../src/fixtures';
 
-test("login validation", async({page}) =>{
+test("login validation", async({pom}) =>{
 
-    const loginPage = new LoginPage(page);
-    const dashboardPage = new DashboardPage(page);
+    // const loginPage = new LoginPage(page);
+    // const dashboardPage = new DashboardPage(page);
 
-    loginPage.navigate();
+    await pom.loginPage.navigate();
 
-    loginPage.login("automachinemail314@gmail.com", "Choracchi@1234");
+    await pom.loginPage.login("automachinemail314@gmail.com", "Choracchi@1234");
 
     //page.pause();
 
-    await expect(dashboardPage.getFeaturedEventsHeading()).toBeVisible();
+    await expect(pom.dashboardPage.getFeaturedEventsHeading()).toBeVisible();
 
 });
 
