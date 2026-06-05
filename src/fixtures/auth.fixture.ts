@@ -3,13 +3,13 @@ import { loginAsUser } from '../utils/APILogin';
 import { uiLoginAsUser } from '../utils/UILogin';
 
 // declaring the type of custom fixture
-type AuthFixtures = {
+export type AuthFixtures = {
     apiAuthenticatedPage : Page;
     uiAuthenticatedPage : Page;
 }
 
 // extend the base playwright test runner with custom login logic
-export const test = base.extend<AuthFixtures>({
+export const authTest = base.extend<AuthFixtures>({
 
     apiAuthenticatedPage: async ({ browser }, use) =>{
 
