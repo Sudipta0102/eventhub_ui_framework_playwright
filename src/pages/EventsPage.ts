@@ -33,4 +33,8 @@ export class EventsPage{
         .filter({has: this.page.locator('h3', {hasText:'Dilli Diwali Mela'})});
 
     }
+
+    getAllEvents(){
+        return this.events;
+    }
 }
