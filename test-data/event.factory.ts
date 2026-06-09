@@ -13,10 +13,10 @@ export class EventFactory{
             category: 'Festival',
             city: fakerEN_IN.location.city(), // it will produce cities within india only
             venue: `${faker.company.name()} Auditorium`,
-            dateTime: faker.date.future().toISOString().substring(0, 16),
+            eventDate: faker.date.future().toISOString(),
             price: faker.number.int({min: 100, max: 1000}),
-            seats: faker.number.int({min: 1, max: 50}),
-            imageUrl: faker.image.urlPicsumPhotos()
+            totalSeats: faker.number.int({min: 20, max: 500}),
+            imageUrl: faker.image.urlPicsumPhotos(),
         };
     }
 
@@ -27,9 +27,9 @@ export class EventFactory{
             category: 'Conference',
             city: fakerEN_IN.location.city(),
             venue: `${faker.company.name()} Very Large Conevetion Center`,
-            dateTime: faker.date.future().toISOString().substring(0, 16),
+            eventDate: faker.date.future().toISOString(),
             price: faker.number.int({ min: 0, max : 2000 }),
-            seats: faker.number.int({ min: 10, max: 50 })
+            totalSeats: faker.number.int({ min: 10, max: 500 })
         };
     }    
 }
