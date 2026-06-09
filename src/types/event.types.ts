@@ -4,8 +4,8 @@ export interface EventData{
     category: 'Conference' | 'Concert' | 'Sports' | 'Workshop' | 'Festival';
     city: string;
     venue: string;
-    dateTime: string;
+    eventDate: string;
     price: string | number;
-    seats: string | number;
+    totalSeats: string | number;
     imageUrl?: string;
 }
