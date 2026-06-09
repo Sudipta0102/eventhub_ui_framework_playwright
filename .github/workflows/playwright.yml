@@ -23,6 +23,7 @@ jobs:
         API_LOGIN_URL: ${{ secrets.API_LOGIN_URL }}
         TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
         TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+        BASE_API_URL: ${{ secrets.BASE_API_URL }}
       run: npx playwright test
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
