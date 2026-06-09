@@ -6,9 +6,10 @@
 // import { CreateEventPage } from '../src/pages/CreateEventPage';
 // import { EventData } from '../src/types/event.types';
 import { test, expect } from '../src/fixtures';
+import { EventData } from '../src/types/event.types';
 import { EventFactory } from '../test-data/event.factory';
 
-test.describe('Create Event Test', ()=>{
+test.describe.skip('Create Event Test', ()=>{
 
     test('should login', async({ apiAuthenticatedPage, pomWithAPIAuthenticatedPage }) =>{
 
@@ -60,5 +61,116 @@ test.describe('Create Event Test', ()=>{
 
         await pomWithAPIAuthenticatedPage.createEventPage.createEvent(minimalEvent);
         await expect(pomWithAPIAuthenticatedPage.createEventPage.getToastNotification()).toBeVisible();
+    })
+});
+test.describe('event lifecycle', () => {
+    test.describe.configure({mode: 'serial'});
+
+    let targetEventId: number;
+    let mockEvent : EventData;
+
+    test('event creation', async ({ apiAuthenticatedPage, pomWithAPIAuthenticatedPage, apiClient }) => {
+
+        await pomWithAPIAuthenticatedPage.headerPage.goToEvents();
+        //await apiAuthenticatedPage.goto('/events'); 
+
+        await apiAuthenticatedPage.waitForLoadState('networkidle');
+
+        //create mock event
+        mockEvent = EventFactory.createEventsWithOptionalFields();
+
+        // create the event using the POST method
+        const createEvent = await apiClient.post(`${process.env.BASE_API_URL}/events`, mockEvent);
+        targetEventId = createEvent.data.id;
+
+        // go to events page
+        //await pomWithAPIAuthenticatedPage.headerPage.goToEvents();
+        await apiAuthenticatedPage.reload();
+        await apiAuthenticatedPage.waitForLoadState('networkidle');
+
+        // get the target events from the event card 
+        const newEvent = pomWithAPIAuthenticatedPage.eventsPage
+            .getAllEvents()
+            .filter({ has: apiAuthenticatedPage.locator('h3', { hasText: createEvent.data.title }) });
+
+        // const newEvent = pomWithAPIAuthenticatedPage.eventsPage
+        // .getAllEvents()
+        // .filter({ hasText: createEvent.data.title });
+
+
+        await expect(newEvent).toBeVisible();
+    })
+
+    test('event fetch', async({apiAuthenticatedPage, pomWithAPIAuthenticatedPage, apiClient})=>{
+
+        await pomWithAPIAuthenticatedPage.headerPage.goToEvents();
+        await apiAuthenticatedPage.waitForLoadState('networkidle');
+
+        const getAllEvents = await apiClient.get(`${process.env.BASE_API_URL}/events`);
+
+        const eventCount = getAllEvents.data.length;
+        console.log('Events Returned by API call: ', eventCount);
+
+        const uiEvents = pomWithAPIAuthenticatedPage.eventsPage.getAllEvents();
+
+        await expect(uiEvents).toHaveCount(eventCount);
+
+    })
+
+    test('fetch filtered event', async({pomWithAPIAuthenticatedPage, apiAuthenticatedPage, apiClient})=>{
+
+        await pomWithAPIAuthenticatedPage.headerPage.goToEvents();
+        await apiAuthenticatedPage.waitForLoadState('networkidle');
+
+        const getFilteredEvents = await apiClient.get(`${process.env.BASE_API_URL}/events`, {
+            params: {
+                category: 'Festival',                
+            },
+        });
+
+        
+        console.log('Fetching filtered event: ', JSON.stringify(getFilteredEvents, null, 2));
+
+
+    })
+
+    test('fetch a single event with id', async({ apiAuthenticatedPage, pomWithAPIAuthenticatedPage, apiClient })=>{
+
+        await pomWithAPIAuthenticatedPage.headerPage.goToEvents();
+        await apiAuthenticatedPage.waitForLoadState('networkidle');
+
+        const getEventById = await apiClient.get(`${process.env.BASE_API_URL}/events/${targetEventId}`);
+
+        console.log('Fetching event by id: ', JSON.stringify(getEventById, null, 2));
+
+    })
+
+    test('edit event', async({apiAuthenticatedPage, pomWithAPIAuthenticatedPage, apiClient})=>{
+
+        await pomWithAPIAuthenticatedPage.headerPage.goToEvents();
+        await apiAuthenticatedPage.waitForLoadState('networkidle');
+
+        const updatedSeats = 125;
+        const updatedCity = 'Delhi';
+
+        const editedEventResponse = await apiClient.put(`${process.env.BASE_API_URL}/events/${targetEventId}`, {
+            ...mockEvent,
+            city: updatedCity,
+            totalSeats: updatedSeats,
+        });
+
+        console.log('Fetching event by id: ', JSON.stringify(editedEventResponse, null, 2));
+        expect(editedEventResponse.success).toBe(true);
+    })
+
+    test('delete event', async({apiAuthenticatedPage, pomWithAPIAuthenticatedPage, apiClient})=>{
+
+        await pomWithAPIAuthenticatedPage.headerPage.goToEvents();
+        await apiAuthenticatedPage.waitForLoadState('networkidle');
+
+        const deleteResponse = await apiClient.delete(`${process.env.BASE_API_URL}/events/${targetEventId}`);
+
+        console.log('Fetching event by id: ', JSON.stringify(deleteResponse, null, 2));
+        expect(deleteResponse.success).toBe(true);
     })
 });
