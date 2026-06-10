@@ -32,11 +32,15 @@ export class NetworkInterceptor{
 
         await this.page.route(urlPattern, async (route: Route) =>{
 
+            //console.log('URL in mock response: ', route.request().url());
             // fulfill() never reaches the real server. It intercepts the
             // outgoing request inside the browser and immediately 
             // feeds the fake response that is sent by this method.
             // check if the ongoing request matches the request here.
             if(route.request().method() === crudMethod) {
+
+                //console.log(`[MOCK SUCCESS] Intercepted ${crudMethod} request to: ${route.request().url()}. Injected mock payload data payload cleanly.`);
+
                 await route.fulfill({
                     status: statusCode,
                     contentType: 'application/json',
