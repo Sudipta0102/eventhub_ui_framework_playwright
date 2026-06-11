@@ -1,5 +1,6 @@
 import { faker, fakerEN_IN } from '@faker-js/faker';
 import { type EventData } from '../src/types/event.types';
+import { formatEventDateTime } from '../src/utils/DateUtils';
 
 export class EventFactory{
 
@@ -31,5 +32,17 @@ export class EventFactory{
             price: faker.number.int({ min: 0, max : 2000 }),
             totalSeats: faker.number.int({ min: 10, max: 500 })
         };
-    }    
+    }  
+    
+    static createEventWithExplicitDate(): EventData{
+        return{
+            title: `${faker.company.catchPhraseAdjective()} Conference`,
+            category: 'Conference',
+            city: fakerEN_IN.location.city(),
+            venue: `${faker.company.name()} Very Large Conevetion Center`,
+            eventDate: formatEventDateTime(11, 6, 2027, "9:32PM"),
+            price: faker.number.int({ min: 0, max : 2000 }),
+            totalSeats: faker.number.int({ min: 10, max: 500 })
+        };
+    }
 }
