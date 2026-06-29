@@ -295,7 +295,7 @@ Recommended future improvements:
 
 -   Browser matrix builds
 -   Test sharding
--   JUnit reporting
+-   Allure reporting/ ExtentReporting
 -   GitHub annotations
 -   Slack notifications
 -   Artifact retention
